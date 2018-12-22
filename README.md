@@ -22,4 +22,3 @@ Experimenting with a data compression algorithm
 | r4_smallest.7z | 1,950b |
 | r4_largest.7z | 7,457b |
 | r4_smallest_decoded.json | 6,813,239b |
-|---|---:|
