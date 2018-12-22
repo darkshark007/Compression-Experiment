@@ -324,136 +324,137 @@ console.log('Loaded!');
 
 
 
-// // Refactor Attempt #4 - Reorder smallest to Largest
-// var newObj = {
-// 	'assets': {},
-// 	'events': {},
-// 	'measurements': {}
-// };
+// Refactor Attempt #4 - Reorder smallest to Largest
+var newObj = {
+	'assets': {},
+	'events': {},
+	'measurements': {}
+};
 
 
-// function compressArray(keys, array) {
-// 	var newObj = {};
+function compressArray(keys, array) {
+	var newObj = {};
 
-// 	for (var idx in array) {
-// 		var current = array[idx];
-// 		var obj = newObj;
-// 		var prevObj = null;
-// 		var prevPrevObj = null;
-// 		for (var key in keys) {
-// 			if (obj[current[keys[key]]] === undefined && obj.length === undefined) { obj[current[keys[key]]] = {}; }
-// 			prevPrevObj = prevObj;
-// 			prevObj = obj;
-// 			obj = obj[current[keys[key]]];
-// 		}
-// 		if (prevPrevObj[current[keys[keys.length-2]]].length === undefined) { prevPrevObj[current[keys[keys.length-2]]] = []; }
-// 		prevPrevObj[current[keys[keys.length-2]]].push(current[keys[keys.length-1]])
-// 	}
-// 	console.log("// var keys = "+JSON.stringify(keys)+"; // "+JSON.stringify(newObj).length);
-// 	return newObj;
-// }
-
-
-
-
-// var eventKeys = ["asset_id","event_type","created_on","bit_mask","event_name"]; // 23208
-// // var eventKeys = ["event_name","created_on","bit_mask","event_type","asset_id"]; // 49341
-// newObj['events'] = compressArray(eventKeys, dump['events']);
-
-
-// var measurementsKeys = ["asset_id","created_on","measurement_modbus_type","measurement_value","bit_mask","measurement_name"]; // 435323
-// // var measurementsKeys = ["measurement_name","created_on","bit_mask","measurement_value","measurement_modbus_type","asset_id"]; // 2654774
-// newObj['measurements'] = compressArray(measurementsKeys, dump['measurements']);
-
-
-
-// var assetsKeys = ["api","asset_id","asset_name","created_on","ip_address","modbus_map_id"]; // 114
-// newObj['assets'] = compressArray(assetsKeys, dump['assets']);
-
-// var newObjString = JSON.stringify(newObj);
-// console.log(newObjString);
-
-
-// // Re-inflate
-// var reinflatedObj = {
-// 	'assets': {},
-// 	'events': {},
-// 	'measurements': {}
-// };
-
-// function reinflate(keys, obj) {
-// 	console.log('REINFLATING: ');
-// 	console.log(obj);
-
-// 	var results = [];
-// 	var data = {};
-// 	for (var keyIdx in keys) {
-// 		var key = keys[keyIdx];
-// 		data[key] = '__';
-// 	}
-
-// 	function reinflateRecursive(idx, obj) {
-// 		console.log(obj);
-// 		for (var val in obj) {
-// 			console.log('Setting idx: '+idx+' to '+ val);
-// 			data[keys[idx]] = val;
-// 			var curr = obj[val];
-
-// 			if (obj.length !== undefined) {
-// 				data[keys[idx]] = curr;
-// 				var result = {};
-// 				for (var keyIdx in keys) {
-// 					var key = keys[keyIdx];
-// 					result[key] = data[key];
-// 				}
-// 				results.push(result);
-// 			} else {
-// 				reinflateRecursive(idx+1, curr);
-// 			}
-// 		}
-
-// 	}
-// 	reinflateRecursive(0, obj);
-// 	return results;
-// }
-// reinflatedObj['assets'] = reinflate(assetsKeys, newObj['assets']);
-// reinflatedObj['events'] = reinflate(eventKeys, newObj['events']);
-// reinflatedObj['measurements'] = reinflate(measurementsKeys, newObj['measurements']);
-
-// var reinflatedObjString = JSON.stringify(reinflatedObj);
-// console.log(reinflatedObjString);
-
-
-// // Refactor Attempt #4
-
-
-// To CSV
-function arrayToCSVString(keys, array) {
-	var str = ""
 	for (var idx in array) {
-		var item = array[idx];
-		var line = "";
-		for (var keyIdx in keys) {
-			// console.log('FOR >> '+keyIdx);
-			if (line !== "" ) { line += ","; }
-			var key = keys[keyIdx];
-			line += item[key];
+		var current = array[idx];
+		var obj = newObj;
+		var prevObj = null;
+		var prevPrevObj = null;
+		for (var key in keys) {
+			if (obj[current[keys[key]]] === undefined && obj.length === undefined) { obj[current[keys[key]]] = {}; }
+			prevPrevObj = prevObj;
+			prevObj = obj;
+			obj = obj[current[keys[key]]];
 		}
-		str += line+"\n";
+		if (prevPrevObj[current[keys[keys.length-2]]].length === undefined) { prevPrevObj[current[keys[keys.length-2]]] = []; }
+		prevPrevObj[current[keys[keys.length-2]]].push(current[keys[keys.length-1]])
 	}
-	return str;
+	console.log("// var keys = "+JSON.stringify(keys)+"; // "+JSON.stringify(newObj).length);
+	return newObj;
 }
-var eventKeys = ["asset_id","event_type","created_on","bit_mask","event_name"];
-var measurementsKeys = ["asset_id","created_on","measurement_modbus_type","measurement_value","bit_mask","measurement_name"];
-var assetsKeys = ["api","asset_id","asset_name","created_on","ip_address","modbus_map_id"];
 
-var csvString = "";
 
-csvString +="events\n"
-csvString += arrayToCSVString(eventKeys, dump['events']);
-csvString +="measurements\n"
-csvString += arrayToCSVString(measurementsKeys, dump['measurements']);
-csvString +="assets\n"
-csvString += arrayToCSVString(assetsKeys, dump['assets']);
 
-console.log(csvString);
+
+var eventKeys = ["asset_id","event_type","created_on","bit_mask","event_name"]; // 23208
+// var eventKeys = ["event_name","created_on","bit_mask","event_type","asset_id"]; // 49341
+newObj['events'] = compressArray(eventKeys, dump['events']);
+
+
+var measurementsKeys = ["asset_id","created_on","measurement_modbus_type","measurement_value","bit_mask","measurement_name"]; // 435323
+// var measurementsKeys = ["measurement_name","created_on","bit_mask","measurement_value","measurement_modbus_type","asset_id"]; // 2654774
+newObj['measurements'] = compressArray(measurementsKeys, dump['measurements']);
+
+
+
+var assetsKeys = ["api","asset_id","asset_name","created_on","ip_address","modbus_map_id"]; // 114
+newObj['assets'] = compressArray(assetsKeys, dump['assets']);
+
+var newObjString = JSON.stringify(newObj);
+console.log(newObjString);
+
+
+// Re-inflate
+var reinflatedObj = {
+	'assets': {},
+	'events': {},
+	'measurements': {}
+};
+
+function reinflate(keys, obj) {
+	console.log('REINFLATING: ');
+	console.log(obj);
+
+	var results = [];
+	var data = {};
+	for (var keyIdx in keys) {
+		var key = keys[keyIdx];
+		data[key] = '__';
+	}
+
+	function reinflateRecursive(idx, obj) {
+		console.log(obj);
+		for (var val in obj) {
+			console.log('Setting idx: '+idx+' to '+ val);
+			data[keys[idx]] = val;
+			var curr = obj[val];
+
+			if (obj.length !== undefined) {
+				data[keys[idx]] = curr;
+				var result = {};
+				for (var keyIdx in keys) {
+					var key = keys[keyIdx];
+					result[key] = data[key];
+				}
+				results.push(result);
+			} else {
+				reinflateRecursive(idx+1, curr);
+			}
+		}
+
+	}
+	reinflateRecursive(0, obj);
+	return results;
+}
+reinflatedObj['assets'] = reinflate(assetsKeys, newObj['assets']);
+reinflatedObj['events'] = reinflate(eventKeys, newObj['events']);
+reinflatedObj['measurements'] = reinflate(measurementsKeys, newObj['measurements']);
+
+var reinflatedObjString = JSON.stringify(reinflatedObj);
+console.log(reinflatedObjString);
+
+
+// Refactor Attempt #4
+
+
+// // To CSV
+// function arrayToCSVString(keys, array) {
+// 	var str = ""
+// 	for (var idx in array) {
+// 		var item = array[idx];
+// 		var line = "";
+// 		for (var keyIdx in keys) {
+// 			// console.log('FOR >> '+keyIdx);
+// 			if (line !== "" ) { line += ","; }
+// 			var key = keys[keyIdx];
+// 			line += item[key];
+// 		}
+// 		str += line+"\n";
+// 	}
+// 	return str;
+// }
+// var eventKeys = ["asset_id","event_type","created_on","bit_mask","event_name"];
+// var measurementsKeys = ["asset_id","created_on","measurement_modbus_type","measurement_value","bit_mask","measurement_name"];
+// var assetsKeys = ["api","asset_id","asset_name","created_on","ip_address","modbus_map_id"];
+
+// var csvString = "";
+
+// csvString +="events\n"
+// csvString += arrayToCSVString(eventKeys, dump['events']);
+// csvString +="measurements\n"
+// csvString += arrayToCSVString(measurementsKeys, dump['measurements']);
+// csvString +="assets\n"
+// csvString += arrayToCSVString(assetsKeys, dump['assets']);
+
+// console.log(csvString);
+// // To CSV
